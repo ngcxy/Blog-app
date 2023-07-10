@@ -6,6 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from 'tss-react/mui';
@@ -66,12 +67,12 @@ export default function Create() {
 	});
 
 	const [postData, updateFormData] = useState(initialFormData);
-	const [postimage, setPostImage] = useState(null);
+	const [postImage, setPostImage] = useState(null);
 
 	const handleChange = (e) => {
 		if ([e.target.name] == 'image') {
 			setPostImage({
-				image: e.target.files,
+				image: e.target.files[0]
 			});
 			console.log(e.target.files);
 		}
@@ -94,11 +95,15 @@ export default function Create() {
 		let formData = new FormData();
 		formData.append('title', postData.title);
 		formData.append('slug', postData.slug);
-		formData.append('author', 1);
+		formData.append('author', '1');
 		formData.append('excerpt', postData.excerpt);
 		formData.append('content', postData.content);
-		formData.append('image', postimage.image[0]);
-		axiosInstance.post(`admin/create/`, formData);
+		formData.append('image', postImage.image);
+		console.log(formData);
+
+		const config = {headers: { 'Content-Type': 'multipart/form-data' } };
+		axiosInstance.post(`post/admin/create/`, formData, config);
+
 		history.push({
 			pathname: '/admin/',
 		});
@@ -123,6 +128,17 @@ export default function Create() {
 
 	const { classes } = useStyles();
 
+	const categories = [
+  {
+    value: '1',
+    label: 'SelfMovie',
+  },
+  {
+    value: '2',
+    label: 'SelfMusic',
+  },
+];
+
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
@@ -131,7 +147,7 @@ export default function Create() {
 				<Typography component="h1" variant="h5">
 					Create New Post
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form className={classes.form} noValidate encType="multipart/form-data">
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<TextField
@@ -139,24 +155,10 @@ export default function Create() {
 								required
 								fullWidth
 								id="title"
-								label="Post Title"
+								label="post title"
 								name="title"
 								autoComplete="title"
 								onChange={handleChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								id="excerpt"
-								label="Post Excerpt"
-								name="excerpt"
-								autoComplete="excerpt"
-								onChange={handleChange}
-								multiline
-								rows={4}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -170,6 +172,40 @@ export default function Create() {
 								autoComplete="slug"
 								value={postData.slug}
 								onChange={handleChange}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								required
+								fullWidth
+								select
+								defaultValue = ""
+								id="category"
+								label="category"
+								name="category"
+								autoComplete="category"
+								onChange={handleChange}
+							>
+								{categories.map((option) => (
+            						<MenuItem key={option.value} value={option.value}>
+										{option.label}
+									</MenuItem>
+          						))}
+							</TextField>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								required
+								fullWidth
+								id="excerpt"
+								label="post excerpt"
+								name="excerpt"
+								autoComplete="excerpt"
+								onChange={handleChange}
+								multiline
+								rows={4}
 							/>
 						</Grid>
 						<Grid item xs={12}>

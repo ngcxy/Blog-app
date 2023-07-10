@@ -19,7 +19,7 @@ const useStyles = makeStyles()((theme) => {
 	return {
 		appBar: {
 			borderBottom: `1px solid ${theme.palette.divider}`,
-			backgroundColor: '#e2f1ff',
+			backgroundColor: '#fafafa',
 		},
 		link: {
 			margin: theme.spacing(1, 1.5),
