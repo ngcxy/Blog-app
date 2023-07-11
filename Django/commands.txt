@@ -6,6 +6,7 @@ cxy@email.com
 Part 1
 =============
 python manage.py makemigrations (--dry-run --verbosity 3)
+python manage.py migrate
 python manage.py runserver
 python manage.py createsuperuser
 pip install coverage
